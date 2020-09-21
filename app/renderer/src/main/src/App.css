@@ -1,0 +1,80 @@
+@import "~antd/dist/antd.css";
+
+.App {
+  height: 100vh;
+  width: 100%;
+}
+
+.rollingBox {
+  overflow: auto;
+}
+.rollingBox::-webkit-scrollbar {
+  width: 0px;
+}
+.collapsedBtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  background: #cccccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardBox {
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+}
+
+.typeCard {
+  width: 100%;
+  height: calc(100% - 48px);
+  padding: 20px;
+  background:#ffffff;
+  box-shadow: 0 2px 10px 0 rgba(31, 56, 88, 0.15);
+  position: relative;
+  overflow: auto;
+}
+
+.cardHeader{
+  height:32px;
+  line-height:32px;
+  font-size:18px;
+  border-bottom:1px solid #cccccc;
+}
+
+.cardHeader span{
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
+  display:inline-block;
+  width:100%;
+}
+.cardContent{
+  margin-top:5px;
+  height:calc(100% - 40px);
+  overflow-y:auto;
+}
+.cardContent span{
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap; 
+  line-height: 18px;
+  display:inline-block;
+  width:100%;
+}
+
+.typeBtnBox {
+  margin-top: 24px;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.ant-modal{
+  top: 10px !important;
+}
