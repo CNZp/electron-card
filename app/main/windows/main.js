@@ -5,8 +5,10 @@ const path = require("path");
 let win;
 function create(){
   win = new BrowserWindow({
-    width: 800,
-    height: 500,
+    width: 930,
+    height: 600,
+    minWidth:930,
+    minHeight:600,
     webPreferences: {
       nodeIntegration: true,
     },

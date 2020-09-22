@@ -2,9 +2,13 @@ import { createContext } from "react";
 
 export default createContext({
   selectType: "",
-  setSelectType: () => {},
+  setSelectType: (selectType) => {},
+  types: [],
   typeMenus: [],
   typeCards: [],
-  addCard: () => {},
-  removeCard: () => {},
+  addCard: (card) => {},
+  editCard: (card) => {},
+  removeCard: (card) => {},
+  clearAllCards: () => {},
+  changeMenus: (isNext) => {},
 });

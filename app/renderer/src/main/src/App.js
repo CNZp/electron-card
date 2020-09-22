@@ -41,6 +41,22 @@ function App() {
     setData(newData);
   };
 
+  const editCard = (card) => {
+    let newData = { ...data };
+    let id = card.id;
+    let type = card.type;
+    let newCards = newData.typeToCards[type];
+    newCards.some((oldCard) => {
+      if (oldCard.id === id) {
+        oldCard.title = card.title;
+        oldCard.content = card.content;
+        return true;
+      }
+    });
+    lsApi.set("cardData", newData);
+    setData(newData);
+  };
+
   const removeCard = (card) => {
     let newData = { ...data };
     let type = card.type;
@@ -61,9 +77,16 @@ function App() {
           if (removeTypeIndex > -1) {
             newData.types.splice(removeTypeIndex, 1);
           }
+          setSelectType("全部");
         }
       }
     }
+    lsApi.set("cardData", newData);
+    setData(newData);
+  };
+
+  const clearAllCards = () => {
+    let newData = { types: [], typeToCards: {} };
     lsApi.set("cardData", newData);
     setData(newData);
   };
@@ -94,13 +117,39 @@ function App() {
     return menus;
   }, [data]);
 
+  let changeMenus = (isNext) => {
+    let targetIndex = -1;
+    typeMenus.some((menu, index) => {
+      if (menu.key === selectType) {
+        targetIndex = index;
+        return true;
+      }
+    });
+    if (targetIndex > -1) {
+      if (isNext) {
+        targetIndex++;
+        targetIndex = targetIndex % typeMenus.length;
+      } else {
+        targetIndex--;
+        if (targetIndex < 0) {
+          targetIndex += typeMenus.length;
+        }
+      }
+      setSelectType(typeMenus[targetIndex].key);
+    }
+  };
+
   let contextValue = {
     selectType,
     setSelectType,
+    types:data.types,
     typeCards,
     typeMenus,
     addCard,
+    editCard,
     removeCard,
+    clearAllCards,
+    changeMenus,
   };
 
   return (
@@ -117,8 +166,19 @@ function App() {
               background: "#ffffff",
             }}
           >
-            <AddCard />
-            <div style={{ height: "calc(100% -24px" }} className="rollingBox">
+            <div
+              style={{
+                height: "24px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontWeight: "bold",
+                color: "#1890ff",
+              }}
+            >
+              卡片分类
+            </div>
+            <div style={{ height: "calc(100% -24px)" }} className="rollingBox">
               <TypeMenu />
             </div>
           </Sider>
