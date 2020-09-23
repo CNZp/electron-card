@@ -13,7 +13,7 @@
 }
 .collapsedBtn {
   position: absolute;
-  top: 0;
+  top: 5px;
   left: 0;
   width: 24px;
   height: 24px;
@@ -62,7 +62,7 @@
 .cardHeader .type {
   font-size: 14px;
   display: inline-block;
-  margin-bottom:15px;
+  margin-bottom: 15px;
   width: 100%;
 }
 
@@ -109,10 +109,47 @@
   width: auto !important;
 }
 
-.ant-modal-body{
+.ant-modal-body {
   padding-bottom: 0px !important;
 }
 
-.ant-modal-wrap{
+.ant-modal-wrap {
   overflow: hidden;
+}
+
+.ant-tabs-tab {
+  padding: 2px !important;
+}
+
+.ant-tabs-nav {
+  padding-top: 5px;
+  padding-left: 5px;
+  margin-bottom: 0px !important;
+}
+
+.utilItem {
+  width: 100%;
+  display: flex;
+  padding: 10px 0px;
+  justify-content: center;
+  flex-direction: column;
+}
+.utilItem:hover {
+  background:#e6f7ff;
+}
+.utilItem .utilIcon {
+  font-size: 32px;
+}
+.utilItem .utilName {
+  text-align: center;
+  font-weight: bold;
+  color: #333333;
+}
+
+.ant-form-item-has-success{
+  margin-bottom: 0px !important;
+}
+
+.ant-tabs-tab-btn{
+  padding: 0px 3px;
 }

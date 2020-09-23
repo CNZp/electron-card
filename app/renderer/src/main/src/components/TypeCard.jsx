@@ -1,4 +1,4 @@
-import { Button, Result, Modal } from "antd";
+import { Button, Result, Popconfirm } from "antd";
 import React, {
   useState,
   useContext,
@@ -10,7 +10,7 @@ import AppContext from "../AppContext";
 import AddCard from "./AddCard";
 import {
   CloseCircleFilled,
-  ExclamationCircleOutlined,
+  BlockOutlined,
   FastBackwardFilled,
   FastForwardFilled,
   CaretLeftFilled,
@@ -22,35 +22,41 @@ import "braft-editor/dist/output.css";
 export default () => {
   const [showIndex, setShowIndex] = useState(0);
   const [showCard, setShowCard] = useState(null);
-  const [contentShow, setContentShow] = useState(false);
-  const { selectType, typeCards, removeCard, changeMenus } = useContext(
-    AppContext
-  );
+  const [contentShow, setContentShow] = useState(true);
+  const {
+    activeKey,
+    selectType,
+    selectTag,
+    searchSelectId,
+    showCards,
+    removeCard,
+    changeMenus,
+  } = useContext(AppContext);
 
   useEffect(() => {
     if (selectType) {
       setShowIndex(0);
     }
-  }, [selectType]);
+  }, [activeKey, selectType, selectTag, searchSelectId]);
 
   useEffect(() => {
-    if (typeCards) {
+    if (showCards) {
       let index = showIndex;
-      if (showIndex >= typeCards.length) {
-        index = Math.max(typeCards.length - 1, 0);
+      if (showIndex >= showCards.length) {
+        index = Math.max(showCards.length - 1, 0);
         setShowIndex(index);
       }
-      setShowCard(typeCards[index]);
+      setShowCard(showCards[index]);
     } else {
       setShowCard(null);
     }
-    setContentShow(false);
-  }, [typeCards, showIndex]);
+    // setContentShow(false);
+  }, [showCards, showIndex]);
 
   const changeIndex = (isNext, isSide) => {
     setShowIndex((showIndex) => {
       let targetIndex = showIndex;
-      let cardLength = typeCards.length;
+      let cardLength = showCards.length;
       if (isSide) {
         if (isNext) {
           targetIndex = cardLength - 1;
@@ -107,24 +113,42 @@ export default () => {
           <div className="typeCard">
             <div className="cardBtnBox">
               <EditCard oldCard={showCard} />
-              <CloseCircleFilled
-                style={{ color: "red" }}
-                onClick={() => {
-                  Modal.confirm({
-                    title: "确认删除本卡片吗?",
-                    icon: <ExclamationCircleOutlined />,
-                    onOk() {
-                      removeCard(showCard);
-                    },
-                  });
-                }}
-              />
+              <Popconfirm
+                title="确认删除本卡片吗？"
+                onConfirm={()=>{removeCard(showCard)}}
+                okText="确认"
+                cancelText="取消"
+              >
+                <CloseCircleFilled
+                  style={{ color: "red" }}
+                />
+              </Popconfirm>
             </div>
             <div className="cardHeader">
               <span className="title">{showCard.title}</span>
               <span className="type">
-                {selectType === "全部" ? "[全部]" : ""}
-                {`${showCard.type} (${showIndex + 1}/${typeCards.length})`}
+                <span
+                  style={{
+                    background: "#1890ff",
+                    color: "#ffffff",
+                    padding: "0px 3px",
+                  }}
+                >
+                  {showCard.type}
+                </span>
+                {(showCard.tags || []).map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      background: "#20A162",
+                      color: "#ffffff",
+                      marginLeft: "5px",
+                      padding: "0px 3px",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
               </span>
             </div>
             <div className="cardContent">
@@ -150,45 +174,60 @@ export default () => {
             </div>
           </div>
 
-          <div className="typeBtnBox">
-            <Button
-              icon={<FastBackwardFilled />}
-              onClick={() => {
-                changeIndex(false, true);
-              }}
-            >
-              开头
-            </Button>
-            <Button
-              icon={<CaretLeftFilled />}
-              onClick={() => {
-                changeIndex(false, false);
-              }}
-            >
-              前一张（左键）
-            </Button>
+          <div
+            className="typeBtnBox"
+            style={{
+              justifyContent:
+                activeKey == "search" ? "flex-end" : "space-between",
+            }}
+          >
+            {activeKey != "search" ? (
+              <>
+                <Button
+                  icon={<FastBackwardFilled />}
+                  onClick={() => {
+                    changeIndex(false, true);
+                  }}
+                >
+                  开头
+                </Button>
+                <Button
+                  icon={<CaretLeftFilled />}
+                  onClick={() => {
+                    changeIndex(false, false);
+                  }}
+                >
+                  前一张（左键）
+                </Button>
+                <span style={{ lineHeight: "32px", fontWeight: "bold" }}>
+                  ({showIndex + 1}/{showCards.length})
+                </span>
+                <Button
+                  icon={<CaretRightFilled />}
+                  onClick={() => {
+                    changeIndex(true, false);
+                  }}
+                >
+                  后一张（右键）
+                </Button>
+                <Button
+                  icon={<FastForwardFilled />}
+                  onClick={() => {
+                    changeIndex(true, true);
+                  }}
+                >
+                  结尾
+                </Button>
+              </>
+            ) : (
+              ""
+            )}
             <AddCard />
-            <Button
-              icon={<CaretRightFilled />}
-              onClick={() => {
-                changeIndex(true, false);
-              }}
-            >
-              后一张（右键）
-            </Button>
-            <Button
-              icon={<FastForwardFilled />}
-              onClick={() => {
-                changeIndex(true, true);
-              }}
-            >
-              结尾
-            </Button>
           </div>
         </div>
       ) : (
         <div>
-          <Result title="暂无卡片" extra={<AddCard noBlock />} />,
+          <Result icon={<BlockOutlined />} title="暂无卡片" extra={<AddCard noBlock />} />,
         </div>
       )}
     </div>

@@ -7,10 +7,13 @@ import BraftEditor from "braft-editor";
 
 export default ({ noBlock }) => {
   const [modalShow, setModalShow] = useState(false);
-  const { selectType, addCard, clearAllCards, types } = useContext(AppContext);
+  const { addCard, types, tags } = useContext(AppContext);
 
   const [newType, setNewType] = useState("");
+  const [newTag, setNewTag] = useState("");
+
   const [tempTypes, setTempTypes] = useState([]);
+  const [tempTags, setTempTags] = useState([]);
 
   const [form] = Form.useForm();
 
@@ -18,6 +21,7 @@ export default ({ noBlock }) => {
     if (modalShow) {
       form.resetFields();
       setTempTypes([...types]);
+      setTempTags([...tags]);
     }
   }, [modalShow]);
 
@@ -50,6 +54,23 @@ export default ({ noBlock }) => {
     }
   };
 
+  const addTempTag = () => {
+    let tag = (newTag + "").trim();
+    if (tag) {
+      let inTag = false;
+      tempTags.some((item) => {
+        if (item === tag) {
+          inTag = true;
+          return true;
+        }
+      });
+      if (!inTag) {
+        setTempTags((tempTags) => [...tempTags, tag]);
+      }
+      setNewTag("");
+    }
+  };
+
   return (
     <>
       <Button
@@ -61,16 +82,6 @@ export default ({ noBlock }) => {
       >
         <b>新增卡片</b>
       </Button>
-      {/* <Button
-        type="danger"
-        size="small"
-        block={!!!noBlock}
-        onClick={() => {
-          clearAllCards();
-        }}
-      >
-        清空卡片
-      </Button> */}
       <Modal
         title={"新增卡片"}
         visible={modalShow}
@@ -81,18 +92,26 @@ export default ({ noBlock }) => {
       >
         <Form
           initialValues={{
-            type: selectType == "全部" ? null : selectType,
             content: BraftEditor.createEditorState(null),
           }}
           size="small"
           form={form}
         >
+          <Form.Item
+            label="卡片标题"
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 21 }}
+            name="title"
+            rules={[{ required: true, message: "不可为空" }]}
+          >
+            <Input placeholder="请输入卡片标题" />
+          </Form.Item>
           <Row>
-            <Col span={8}>
+            <Col span={12}>
               <Form.Item
                 label="卡片类型"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
                 name="type"
                 rules={[{ required: true, message: "不可为空" }]}
               >
@@ -106,22 +125,29 @@ export default ({ noBlock }) => {
                         style={{
                           display: "flex",
                           flexWrap: "nowrap",
-                          padding: 8,
+                          padding: "8px",
                         }}
                       >
                         <Input
-                          style={{ flex: "auto" }}
+                          style={{ flex: "auto", height: "24px" }}
                           value={newType}
                           onChange={(e) => {
                             setNewType(e.target.value);
+                          }}
+                          onKeyDown={(e) => {
+                            e.stopPropagation();
+                          }}
+                          onPressEnter={(e) => {
+                            addTempType();
+                            e.stopPropagation();
                           }}
                         />
                         <a
                           style={{
                             flex: "none",
-                            padding: "8px",
                             display: "block",
                             cursor: "pointer",
+                            paddingLeft: "8px",
                           }}
                           onClick={() => {
                             addTempType();
@@ -141,22 +167,71 @@ export default ({ noBlock }) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={16}>
+            <Col span={12}>
               <Form.Item
-                label="卡片标题"
+                label="卡片标签"
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 18 }}
-                name="title"
-                rules={[{ required: true, message: "不可为空" }]}
+                name="tags"
               >
-                <Input placeholder="请输入卡片标题" />
+                <Select
+                  mode="multiple"
+                  placeholder="请选择或增加多个卡片标签"
+                  dropdownRender={(menu) => (
+                    <div>
+                      {menu}
+                      <Divider style={{ margin: "4px 0" }} />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "nowrap",
+                          padding: 8,
+                        }}
+                      >
+                        <Input
+                          style={{ flex: "auto", height: "24px" }}
+                          value={newTag}
+                          onChange={(e) => {
+                            setNewTag(e.target.value);
+                          }}
+                          onKeyDown={(e) => {
+                            e.stopPropagation();
+                          }}
+                          onPressEnter={(e) => {
+                            addTempTag();
+                            e.stopPropagation();
+                          }}
+                        />
+                        <a
+                          style={{
+                            flex: "none",
+                            paddingLeft: "8px",
+                            display: "block",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            addTempTag();
+                          }}
+                        >
+                          <PlusOutlined /> 新增项
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                >
+                  {tempTags.map((tag) => (
+                    <Select.Option key={tag} value={tag}>
+                      {tag}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>
           <Form.Item wrapperCol={{ span: 24 }} name="content">
             <ContentEditor
               placeholder="请输入卡片内容"
-              contentStyle={{ height: "250px", fontSize: "14px" }}
+              contentStyle={{ height: "200px", fontSize: "14px" }}
             />
           </Form.Item>
         </Form>

@@ -3,15 +3,15 @@ import { Menu } from "antd";
 import AppContext from "../AppContext";
 
 export default (props) => {
-  const { selectType, setSelectType, showMenus } = useContext(AppContext);
+  const { selectTag, setSelectTag, showMenus } = useContext(AppContext);
 
   return (
     <Menu
       mode="inline"
-      selectedKeys={[selectType]}
+      selectedKeys={[selectTag]}
       style={{ height: "100%", borderRight: 0 }}
       onClick={({ key }) => {
-        setSelectType(key);
+        setSelectTag(key);
       }}
     >
       <div style={{ textAlign: "center", marginTop: "20px",marginBottom: "20px", color: "#999999" }}>
