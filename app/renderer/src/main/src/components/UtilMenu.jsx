@@ -4,7 +4,7 @@ import AppContext from "../AppContext";
 import { WechatOutlined, ZhihuOutlined } from "@ant-design/icons";
 
 const UtilItem = (props) => {
-  const { color, url, name } = props;
+  const { color, url, name, openWebview } = props;
 
   return (
     <div
@@ -15,8 +15,9 @@ const UtilItem = (props) => {
           if (url.substring(0, 4) !== "http") {
             target = "http://" + target;
           }
-          let targetName = name + (Math.random()*1000000).toFixed(0);
-          window.open(target, targetName, 'height=800, width=1300');
+          openWebview({name, url: target});
+          // let targetName = name + (Math.random()*1000000).toFixed(0);
+          // window.open(target, targetName, 'height=800, width=1300');
         }
       }}
     >
@@ -31,7 +32,7 @@ const UtilItem = (props) => {
 };
 
 export default () => {
-  const { utils } = useContext(AppContext);
+  const { utils, openWebview } = useContext(AppContext);
 
   return (
     <div style={{ height: "100%", padding: "10px" }}>
@@ -40,7 +41,7 @@ export default () => {
           <>
             {utils.map((util) => (
               <Col span={12}>
-                <UtilItem {...util} />
+                <UtilItem {...util} openWebview={openWebview}/>
               </Col>
             ))}
           </>

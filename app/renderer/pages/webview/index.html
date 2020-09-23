@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="generator" content="GWrite (WYSIWYG editor)" />
+    <title></title>
+    <style>
+      webview {
+        display: inline-flex;
+        height: 100%;
+        width: 100%;
+      }
+      webview.hide {
+        visibility: hidden;
+      }
+      .btnBox {
+        position: fixed;
+      }
+    </style>
+  </head>
+  <body style="margin: 0px">
+    <div class="btnBox">
+      <button
+        id="houtui"
+        style="width: 60px; backgrund-color: red; border: none"
+        onclick="goBackWebView()"
+      >
+        后退
+      </button>
+      <button
+        id="shuaxin"
+        style="width: 60px; backgrund-color: red; border: none"
+        onclick="goForwardWebView()"
+      >
+        刷新
+      </button>
+    </div>
+    <div style="width: 100%; height: 100vh">
+      <webview
+        id="webview"
+        autosize="on"
+        width="100%"
+        height="100%"
+        allowpopups
+      ></webview>
+    </div>
+  </body>
+  <script>
+    let webview = (onload = () => {
+      webview = document.getElementById("webview");
+      let webviewInfo = localStorage.getItem("webviewInfo");
+      if (webviewInfo) {
+        webviewInfo = JSON.parse(webviewInfo);
+        // webview.setAttribute("src", webviewInfo.url);
+        // window.document.title = webviewInfo.name;
+      }
+      webview.setAttribute("src", "https://www.yuque.com/ruanyf/weekly/");
+      // webview.addEventListener("dom-ready", () => {
+      //   debugger;
+      //   // const webContents = webview.getWebContents();
+      //   webContents.on("new-window", (event, url) => {
+      //     event.preventDefault();
+      //     webview.loadURL(url);
+      //   });
+      // });
+    });
+    function goBackWebView() {
+      webview.goBack();
+    }
+    function goForwardWebView() {
+      webview.reload();
+    }
+  </script>
+</html>

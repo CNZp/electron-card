@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
-// import { ipcRenderer } from "electron";
+import { ipcRenderer } from "electron";
 //const {ipcRenderer} = window.require('electron');
 
 import { Button, Layout, Tabs } from "antd";
@@ -354,6 +354,11 @@ function App() {
     setUtils(utils);
   }
 
+  const openWebview = (webviewInfo) =>{
+    lsApi.set("webviewInfo", webviewInfo);
+    ipcRenderer.send("open-webview");
+  }
+
   let contextValue = {
     selectType,
     setSelectType,
@@ -376,6 +381,7 @@ function App() {
     removeCard,
     changeMenus,
     saveUtils,
+    openWebview,
   };
 
   return (
