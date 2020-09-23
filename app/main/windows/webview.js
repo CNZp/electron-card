@@ -5,12 +5,13 @@ const path = require("path");
 let winStore = {};
 
 function create() {
-  win = new BrowserWindow({
-    width: 1366,
+  let win = new BrowserWindow({
+    width: 930,
     height: 768,
     webPreferences: {
       nodeIntegration: true,
-      webviewTag: true
+      webviewTag: true,
+      nativeWindowOpen: true,
     },
   });
 
@@ -20,12 +21,10 @@ function create() {
   win.loadFile(
     path.resolve(__dirname, "../../renderer/pages/webview/index.html")
   );
-  
-  // win.webContents.openDevTools();
 
-  win.on("close",()=>{
+  win.on("close", () => {
     delete winStore[id];
-  })
+  });
 }
 
 module.exports = { create };

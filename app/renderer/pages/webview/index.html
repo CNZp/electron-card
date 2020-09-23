@@ -52,18 +52,10 @@
       let webviewInfo = localStorage.getItem("webviewInfo");
       if (webviewInfo) {
         webviewInfo = JSON.parse(webviewInfo);
-        // webview.setAttribute("src", webviewInfo.url);
-        // window.document.title = webviewInfo.name;
+        webview.setAttribute("src", webviewInfo.url);
+        window.document.title = webviewInfo.name;
       }
-      webview.setAttribute("src", "https://www.yuque.com/ruanyf/weekly/");
-      // webview.addEventListener("dom-ready", () => {
-      //   debugger;
-      //   // const webContents = webview.getWebContents();
-      //   webContents.on("new-window", (event, url) => {
-      //     event.preventDefault();
-      //     webview.loadURL(url);
-      //   });
-      // });
+      // webview.setAttribute("src", "https://www.yuque.com/ruanyf/weekly/");
     });
     function goBackWebView() {
       webview.goBack();
